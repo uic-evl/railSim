@@ -1,4 +1,6 @@
 request_dependency(cyclops)
+request_dependency(skyboxes)
+
 include_directories(${OSG_INCLUDES})
 add_executable(railSimmodeshapes 
 		railSimmodeshapes.cpp)
