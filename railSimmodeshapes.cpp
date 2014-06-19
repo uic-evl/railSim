@@ -751,7 +751,7 @@ void OmegaViewer::initialize()
 	// Create skybox
 	
 	Skybox* sb = new Skybox();
-	sb->loadCubeMap("common/cubemaps/grid4", "png");
+	sb->loadCubeMap("skyboxes/grid4", "png");
 	sceneMngr->setSkyBox(sb);
 	
 }
