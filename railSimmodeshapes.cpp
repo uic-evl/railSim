@@ -4,8 +4,7 @@ Author:
 Vaibhav Govilkar vaibhavgovilkar88@gmail.com
 ********************************************************************************/
 #include <omega.h>
-#include <cyclops.h>
-#include <cyclops/SceneManager.h>
+#include <cyclops/cyclops.h>
 #include <omegaToolkit.h>
 
 #include <iostream>
@@ -22,7 +21,7 @@ using namespace omegaToolkit;
 using namespace omegaToolkit::ui;
 using namespace cyclops;
 using namespace std;			//Needed for file reading, but there might be an OmegaLib way
-
+using namespace omegaOsg;
 // The name of the script to launch automatically at startup
 String sDefaultScript = "";
 
@@ -110,7 +109,6 @@ public:
 	Entity* frameEntity;
 	Findgeometry *modegeometry;
 
-	
 	virtual void initialize();
 	virtual void update(const UpdateContext& context);
 	virtual void handleEvent(const Event& evt);
@@ -209,7 +207,8 @@ OmegaViewer::OmegaViewer(): EngineModule("OmegaViewer"), magnifier(NULL),mymode(
 void OmegaViewer::initializeData()
 {
 	String data;
-
+	
+	OsgModule::instance()->setCompileGLObjects(false);
 	//Flag to dertemine if you were able to get all the data you wanted.
 	bool gotAllData = true;
 
@@ -613,7 +612,7 @@ void OmegaViewer::initialize()
 	//go into the sceneMangr to find the entity 0 as defined by
 	// 	/omegalib/data/railsim/test/railSim.scene under the heading <Entities>
 	//  Assign the pointers to entities so you do not have to constantly look them up later
-
+	
 	wheelSetEntity = dynamic_cast<AnimatedObject*>(getEngine()->getScene()->getChild("wheel"));
 	if(!wheelSetEntity) owarn("Wheel not loaded");
 	else omsg("Wheel loaded");
@@ -648,8 +647,8 @@ void OmegaViewer::initialize()
 	mode=0;
 
 //	ProgramAsset* prog= sceneMngr->getOrCreateProgram("Colored-clip","cyclops/common/Colored-clip.vert","cyclops/common/Colored-clip.frag");
-	ProgramAsset* progsim= sceneMngr->getOrCreateProgram("Textured-border","railSimmodeshapes/Textured.vert","railSimmodeshapes/Textured-border.frag");
-	ProgramAsset* progmode= sceneMngr->getOrCreateProgram("Textured-modes","railSimmodeshapes/Texturedmode.vert","railSimmodeshapes/Textured-border.frag");
+	ProgramAsset* progsim= sceneMngr->getOrCreateProgram("Textured-border","railSim/Textured.vert","railSim/Textured-border.frag");
+	ProgramAsset* progmode= sceneMngr->getOrCreateProgram("Textured-modes","railSim/Texturedmode.vert","railSim/Textured-border.frag");
 	modeshape->setEffect("Textured-border -s 0 -t -g 0");
 
 	progsim->program->addBindAttribLocation("deformation",6);
@@ -747,7 +746,7 @@ void OmegaViewer::initialize()
 	l5->setColor(Color(1.0f, 1.0f, 1.0f));
 	l5->setAmbient(Color(0.0f, 0.0f, 0.0f));
 	
- 	sceneMngr->setMainLight(l);
+ 	
 	
 	// Create skybox
 	
@@ -1231,6 +1230,6 @@ Quaternion OmegaViewer::toquaternion(const Vector3f& yawPitchRoll)
 int main(int argc, char** argv)
 {
 	Application<OmegaViewer> app("railSimmodeshapes");
-	oargs().newNamedString('s', "script", "script", "script to launch at startup", sDefaultScript);
+	app.setName("railSim");
 	return omain(app, argc, argv);
 }
